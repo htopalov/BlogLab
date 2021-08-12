@@ -1,5 +1,5 @@
 ﻿using BlogLab.Models.Account;
-using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using System.Threading.Tasks;
 

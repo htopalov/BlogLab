@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "vpClXL1XfuEP9VomZfwCxYPv2fFVX3pR3QTLQXfq14wzTFVYsA6D+KSUPT14Wo9mzS79tj90bIyCdJRcuRa2KA==",
+  "dgSpecHash": "jRzqf1JWkpXAsiMkEZjRgLqqYBrv+KQgQ9GcZoIMQVWXkyePZdh1LiSgSv0NhMwUmPE7BTVAP4fqDOmjs/ZkOg==",
   "success": true,
   "projectFilePath": "D:\\Udemy Projects\\BlogLab\\BlogLab.Web\\BlogLab.Web.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Hristo Topalov\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -12,21 +12,36 @@ namespace BlogLab.Identity
         IUserEmailStore<ApplicationUserIdentity>,
         IUserPasswordStore<ApplicationUserIdentity>
     {
-        private readonly IAccountRepository _accountRepository;
+        private readonly IAccountRepository _accountRepsoitory;
 
         public UserStore(IAccountRepository accountRepository)
         {
-            _accountRepository = accountRepository;
+            _accountRepsoitory = accountRepository;
         }
 
         public async Task<IdentityResult> CreateAsync(ApplicationUserIdentity user, CancellationToken cancellationToken)
         {
-            return await _accountRepository.CreateAsync(user, cancellationToken);
+            return await _accountRepsoitory.CreateAsync(user, cancellationToken);
         }
 
         public async Task<ApplicationUserIdentity> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return await _accountRepository.GetByUsernameAsync(normalizedUserName, cancellationToken);
+            return await _accountRepsoitory.GetByUsernameAsync(normalizedUserName, cancellationToken);
+        }
+
+        public Task<IdentityResult> DeleteAsync(ApplicationUserIdentity user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationUserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationUserIdentity> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<string> GetEmailAsync(ApplicationUserIdentity user, CancellationToken cancellationToken)
@@ -104,22 +119,6 @@ namespace BlogLab.Identity
             return Task.FromResult(0);
         }
 
-        public Task<IdentityResult> DeleteAsync(ApplicationUserIdentity user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public Task<ApplicationUserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApplicationUserIdentity> FindByIdAsync(string userId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IdentityResult> UpdateAsync(ApplicationUserIdentity user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -127,7 +126,7 @@ namespace BlogLab.Identity
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // Nothing to dispose
         }
 
     }

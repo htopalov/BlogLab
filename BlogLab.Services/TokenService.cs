@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
@@ -16,8 +17,8 @@ namespace BlogLab.Services
 
         public TokenService(IConfiguration config)
         {
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]));
-            _issuer = config["JWT:Issuer"];
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
+            _issuer = config["Jwt:Issuer"];
         }
 
         public string CreateToken(ApplicationUserIdentity user)
@@ -37,6 +38,7 @@ namespace BlogLab.Services
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds
                 );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

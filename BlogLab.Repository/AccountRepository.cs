@@ -2,8 +2,11 @@
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +25,7 @@ namespace BlogLab.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            DataTable dataTable = new DataTable();
+            var dataTable = new DataTable();
             dataTable.Columns.Add("Username", typeof(string));
             dataTable.Columns.Add("NormalizedUsername", typeof(string));
             dataTable.Columns.Add("Email", typeof(string));
@@ -38,11 +41,13 @@ namespace BlogLab.Repository
                 user.Fullname,
                 user.PasswordHash
                 );
-            using(SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync(cancellationToken);
+
                 await connection.ExecuteAsync("Account_Insert",
-                    new { Account = dataTable.AsTableValuedParameter("dbo.AccountType")}, commandType: CommandType.StoredProcedure);
+                    new { Account = dataTable.AsTableValuedParameter("dbo.AccountType") }, commandType: CommandType.StoredProcedure);
             }
 
             return IdentityResult.Success;
@@ -51,14 +56,15 @@ namespace BlogLab.Repository
         public async Task<ApplicationUserIdentity> GetByUsernameAsync(string normalizedUsername, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
             ApplicationUserIdentity applicationUser;
 
-            using(SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync(cancellationToken);
 
-                applicationUser = await connection.QueryFirstOrDefaultAsync<ApplicationUserIdentity>(
-                    "Acount_GetByUsername", new { NormalizedUsername = normalizedUsername },
+                applicationUser = await connection.QuerySingleOrDefaultAsync<ApplicationUserIdentity>(
+                    "Account_GetByUsername", new { NormalizedUsername = normalizedUsername },
                     commandType: CommandType.StoredProcedure
                     );
             }

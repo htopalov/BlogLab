@@ -1,4 +1,8 @@
-﻿namespace BlogLab.Models.Photo
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BlogLab.Models.Photo
 {
     public class PhotoCreate
     {

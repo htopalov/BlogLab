@@ -1,10 +1,12 @@
 ﻿using BlogLab.Models.Blog;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BlogLab.Repository
@@ -22,7 +24,7 @@ namespace BlogLab.Repository
         {
             int affectedRows = 0;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
 
@@ -35,25 +37,27 @@ namespace BlogLab.Repository
             return affectedRows;
         }
 
-        public async Task<PageResults<Blog>> GetAllAsync(BlogPaging blogPaging)
+        public async Task<PagedResults<Blog>> GetAllAsync(BlogPaging blogPaging)
         {
-            PageResults<Blog> results = new PageResults<Blog>();
+            var results = new PagedResults<Blog>();
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
-                using(var multi = await connection.QueryMultipleAsync("Blog_GetAll",
-                    new {
-                        Offset = (blogPaging.Page - 1) *blogPaging.PageSize,
+
+                using (var multi = await connection.QueryMultipleAsync("Blog_GetAll",
+                    new { 
+                        Offset = (blogPaging.Page - 1) * blogPaging.PageSize,
                         PageSize = blogPaging.PageSize
-                    },
+                    }, 
                     commandType: CommandType.StoredProcedure))
                 {
                     results.Items = multi.Read<Blog>();
+
                     results.TotalCount = multi.ReadFirst<int>();
                 }
-
             }
+
             return results;
         }
 
@@ -61,14 +65,16 @@ namespace BlogLab.Repository
         {
             IEnumerable<Blog> blogs;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 blogs = await connection.QueryAsync<Blog>(
                     "Blog_GetByUserId",
                     new { ApplicationUserId = applicationUserId },
                     commandType: CommandType.StoredProcedure);
             }
+
             return blogs.ToList();
         }
 
@@ -76,14 +82,16 @@ namespace BlogLab.Repository
         {
             IEnumerable<Blog> famousBlogs;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 famousBlogs = await connection.QueryAsync<Blog>(
                     "Blog_GetAllFamous",
                     new { },
                     commandType: CommandType.StoredProcedure);
             }
+
             return famousBlogs.ToList();
         }
 
@@ -91,20 +99,22 @@ namespace BlogLab.Repository
         {
             Blog blog;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 blog = await connection.QueryFirstOrDefaultAsync<Blog>(
                     "Blog_Get",
                     new { BlogId = blogId },
                     commandType: CommandType.StoredProcedure);
             }
+
             return blog;
         }
 
         public async Task<Blog> UpsertAsync(BlogCreate blogCreate, int applicationUserId)
         {
-            DataTable dataTable = new DataTable();
+            var dataTable = new DataTable();
             dataTable.Columns.Add("BlogId", typeof(int));
             dataTable.Columns.Add("Title", typeof(string));
             dataTable.Columns.Add("Content", typeof(string));
@@ -114,7 +124,7 @@ namespace BlogLab.Repository
 
             int? newBlogId;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
 

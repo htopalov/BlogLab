@@ -1,4 +1,8 @@
-﻿namespace BlogLab.Models.Blog
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BlogLab.Models.Blog
 {
     public class BlogPaging
     {

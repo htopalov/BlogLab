@@ -1,11 +1,13 @@
 ﻿using BlogLab.Models.Photo;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BlogLab.Repository
 {
@@ -18,11 +20,11 @@ namespace BlogLab.Repository
             _config = config;
         }
 
-        public async Task<int> DeleteAsync(int photoId)
+        public async Task<int> DeletetAsync(int photoId)
         {
             int affectedRows = 0;
 
-            using(SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
 
@@ -39,35 +41,40 @@ namespace BlogLab.Repository
         {
             IEnumerable<Photo> photos;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 photos = await connection.QueryAsync<Photo>(
                     "Photo_GetByUserId",
                     new { ApplicationUserId = applicationUserId },
                     commandType: CommandType.StoredProcedure);
             }
+
             return photos.ToList();
+
         }
 
         public async Task<Photo> GetAsync(int photoId)
         {
             Photo photo;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 photo = await connection.QueryFirstOrDefaultAsync<Photo>(
                     "Photo_Get",
-                    new { PhotoId = photoId },
+                    new { PhotoId = photoId},
                     commandType: CommandType.StoredProcedure);
             }
+
             return photo;
         }
 
         public async Task<Photo> InsertAsync(PhotoCreate photoCreate, int applicationUserId)
         {
-            DataTable dataTable = new DataTable();
+            var dataTable = new DataTable();
             dataTable.Columns.Add("PublicId", typeof(string));
             dataTable.Columns.Add("ImageUrl", typeof(string));
             dataTable.Columns.Add("Description", typeof(string));
@@ -76,9 +83,10 @@ namespace BlogLab.Repository
 
             int newPhotoId;
 
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 await connection.OpenAsync();
+
                 newPhotoId = await connection.ExecuteScalarAsync<int>(
                     "Photo_Insert",
                     new { 
@@ -89,8 +97,8 @@ namespace BlogLab.Repository
             }
 
             Photo photo = await GetAsync(newPhotoId);
-            return photo;
 
+            return photo;
         }
     }
 }

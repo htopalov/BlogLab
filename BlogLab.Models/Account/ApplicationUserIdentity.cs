@@ -1,4 +1,8 @@
-﻿namespace BlogLab.Models.Account
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BlogLab.Models.Account
 {
     public class ApplicationUserIdentity
     {

@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace BlogLab.Models.BlogComment
 {
@@ -10,9 +13,9 @@ namespace BlogLab.Models.BlogComment
 
         public int BlogId { get; set; }
 
-        [Required(ErrorMessage = "Content is required!")]
-        [MinLength(10, ErrorMessage = "Content must be between 10 and 300 characters long!")]
-        [MaxLength(300, ErrorMessage = "Content must be between 10 and 300 characters long!")]
+        [Required(ErrorMessage = "Content is required")]
+        [MinLength(10, ErrorMessage = "Must be 10-300 characters")]
+        [MaxLength(300, ErrorMessage = "Must be 10-300 characters")]
         public string Content { get; set; }
     }
 }

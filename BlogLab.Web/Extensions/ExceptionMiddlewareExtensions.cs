@@ -21,8 +21,10 @@ namespace BlogLab.Web.Extensions
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.ContentType = "application/json";
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if (contextFeature != null)
+                    if (contextFeature !=  null)
                     {
+                        // In production version you would log exceptions into your database
+
                         await context.Response.WriteAsync(new ApiException()
                         {
                             StatusCode = context.Response.StatusCode,

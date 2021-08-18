@@ -1,13 +1,13 @@
-﻿using BlogLab.Models.BlogComment;
-using BlogLab.Repository;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using BlogLab.Models.BlogComment;
+using BlogLab.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogLab.Web.Controllers
 {
@@ -27,6 +27,7 @@ namespace BlogLab.Web.Controllers
         public async Task<ActionResult<BlogComment>> Create(BlogCommentCreate blogCommentCreate)
         {
             int applicationUserId = int.Parse(User.Claims.First(i => i.Type == JwtRegisteredClaimNames.NameId).Value);
+
             var createdBlogComment = await _blogCommentRepository.UpsertAsync(blogCommentCreate, applicationUserId);
 
             return Ok(createdBlogComment);
@@ -37,7 +38,7 @@ namespace BlogLab.Web.Controllers
         {
             var blogComments = await _blogCommentRepository.GetAllAsync(blogId);
 
-            return Ok(blogComments);
+            return blogComments;
         }
 
         [Authorize]
@@ -45,21 +46,20 @@ namespace BlogLab.Web.Controllers
         public async Task<ActionResult<int>> Delete(int blogCommentId)
         {
             int applicationUserId = int.Parse(User.Claims.First(i => i.Type == JwtRegisteredClaimNames.NameId).Value);
+
             var foundBlogComment = await _blogCommentRepository.GetAsync(blogCommentId);
 
-            if (foundBlogComment == null)
-            {
-                return BadRequest("Comment does not exist");
-            }
+            if (foundBlogComment == null) return BadRequest("Comment does not exist.");
 
-            if (foundBlogComment.AppplicationUserId == applicationUserId)
+            if (foundBlogComment.ApplicationUserId == applicationUserId)
             {
                 var affectedRows = await _blogCommentRepository.DeleteAsync(blogCommentId);
+
                 return Ok(affectedRows);
             }
             else
             {
-                return BadRequest("This comment is not created by current user");
+                return BadRequest("This comment was not created by the current user.");
             }
         }
     }

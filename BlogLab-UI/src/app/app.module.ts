@@ -29,6 +29,7 @@ import {CollapseModule} from 'ngx-bootstrap/collapse';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
+import {PaginationModule} from 'ngx-bootstrap/pagination';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import {CarouselModule} from 'ngx-bootstrap/carousel';
     }),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
-    CarouselModule.forRoot()
+    CarouselModule.forRoot(),
+    PaginationModule.forRoot()
   ],
   providers: [
     HttpClient,

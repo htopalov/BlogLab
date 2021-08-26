@@ -27,6 +27,7 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {CollapseModule} from 'ngx-bootstrap/collapse';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    TypeaheadModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),

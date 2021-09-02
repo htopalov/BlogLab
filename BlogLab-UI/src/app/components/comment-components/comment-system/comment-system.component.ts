@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { BlogCommentViewModel } from 'src/app/models/blog-comment/blog-comment-view-model.model';
 import { BlogComment } from 'src/app/models/blog-comment/blog-comment.model';
 import { AccountService } from 'src/app/services/account.service';
@@ -10,10 +11,13 @@ import { BlogCommentService } from 'src/app/services/blog-comment.service';
   styleUrls: ['./comment-system.component.css']
 })
 export class CommentSystemComponent implements OnInit {
+
   @Input() blogId: number;
+
   standAloneComment: BlogCommentViewModel;
   blogComments: BlogComment[];
   blogCommentViewModels: BlogCommentViewModel[];
+
   constructor(
     private blogCommentService: BlogCommentService,
     public accountService: AccountService
@@ -21,6 +25,7 @@ export class CommentSystemComponent implements OnInit {
 
   ngOnInit(): void {
     this.blogCommentService.getAll(this.blogId).subscribe(blogComments => {
+
       if (this.accountService.isLoggedIn()) {
         this.initComment(this.accountService.currentUserValue.username);
       }
@@ -28,15 +33,16 @@ export class CommentSystemComponent implements OnInit {
       this.blogComments = blogComments;
       this.blogCommentViewModels = [];
 
-      for(let i=0; i <this.blogComments.length; i++){
+      for (let i=0; i<this.blogComments.length; i++) {
         if (!this.blogComments[i].parentBlogCommentId) {
           this.findCommentReplies(this.blogCommentViewModels, i);
         }
       }
+
     });
   }
 
-  initComment(username: string){
+  initComment(username: string) {
     this.standAloneComment = {
       parentBlogCommentId: null,
       content: '',
@@ -52,7 +58,8 @@ export class CommentSystemComponent implements OnInit {
     };
   }
 
-  findCommentReplies(blogCommentViewModels: BlogCommentViewModel[], index: number){
+  findCommentReplies(blogCommentViewModels: BlogCommentViewModel[], index: number) {
+
     let firstElement = this.blogComments[index];
     let newComments: BlogCommentViewModel[] = [];
 
@@ -72,14 +79,14 @@ export class CommentSystemComponent implements OnInit {
 
     blogCommentViewModels.push(commentViewModel);
 
-    for(let i=0; i <this.blogComments.length; i++){
+    for (let i=0; i<this.blogComments.length; i++) {
       if (this.blogComments[i].parentBlogCommentId === firstElement.blogCommentId) {
         this.findCommentReplies(newComments, i);
       }
     }
   }
 
-  onCommentSaved(blogComment: BlogComment){
+  onCommentSaved(blogComment: BlogComment) {
     let commentViewModel: BlogCommentViewModel = {
       parentBlogCommentId: blogComment.parentBlogCommentId,
       content: blogComment.content,

@@ -16,7 +16,7 @@ export class FamousBlogsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.blogService.getMostFamous().subscribe(blogs =>{
+    this.blogService.getMostFamous().subscribe(blogs => {
       this.famousBlogs = blogs;
     });
   }

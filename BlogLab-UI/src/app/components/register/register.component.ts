@@ -10,6 +10,7 @@ import { AccountService } from 'src/app/services/account.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+
   registerForm: FormGroup;
 
   constructor(
@@ -20,67 +21,65 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      fullname: [null,[
+      fullname: [null, [
         Validators.minLength(10),
         Validators.maxLength(30)
       ]],
-      username: [null,[
+      username: [null, [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(20)
       ]],
-      email: [null,[
+      email: [null, [
         Validators.required,
         Validators.pattern(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i),
         Validators.maxLength(30)
       ]],
-      password: [null,[
+      password: [null, [
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(50)
       ]],
-      confirmPassword: [null,[
+      confirmPassword: [null, [
         Validators.required
-      ]]
+      ]],
     }, {
-      Validators: this.matchValue
+      validators: this.matchValue
     });
   }
-  formHasError(error: string){
+
+  formHasError(error: string) {
     return !!this.registerForm.hasError(error);
   }
 
-  isTouched(field: string){
+  isTouched(field: string) {
     return this.registerForm.get(field).touched;
   }
 
-  hasErrors(field: string){
+  hasErrors(field: string) {
     return this.registerForm.get(field).errors;
   }
 
-  hasError(field: string, error: string){
+  hasError(field: string, error: string) {
     return !!this.registerForm.get(field).hasError(error);
   }
 
   matchValue: ValidatorFn = (fg: FormGroup) => {
     const password = fg.get('password').value;
     const confirmPassword = fg.get('confirmPassword').value;
-    return password === confirmPassword ? null : {isMatching: true};
+    return password === confirmPassword ? null : { isMatching: true };
   }
 
-  onSubmit(){
+  onSubmit() {
     let applicationUserCreate: ApplicationUserCreate = new ApplicationUserCreate(
-      this.registerForm.get('username').value,
-      this.registerForm.get('password').value,
-      this.registerForm.get('email').value,
-      this.registerForm.get('fullname').value,
+      this.registerForm.get("username").value,
+      this.registerForm.get("password").value,
+      this.registerForm.get("email").value,
+      this.registerForm.get("fullname").value,
+    );
 
-
-
-    )
-
-    this.accountService.register(applicationUserCreate).subscribe(()=> {
+    this.accountService.register(applicationUserCreate).subscribe(() => {
       this.router.navigate(['/dashboard']);
-    });
+    })
   }
 }

@@ -56,10 +56,6 @@ export class AccountService {
     return this.currentUserSubject$.value;
   }
 
-  public givenUserIsLoggedIn(username: string){
-    return this.isLoggedIn() && this.currentUserValue.username === username;
-  }
-
   public givenUserIsLoggedIn(username: string) {
     return this.isLoggedIn() && this.currentUserValue.username === username;
   }

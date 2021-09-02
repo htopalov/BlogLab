@@ -11,6 +11,7 @@ import { BlogCommentService } from 'src/app/services/blog-comment.service';
   styleUrls: ['./comments.component.css']
 })
 export class CommentsComponent implements OnInit {
+
   @Input() comments: BlogCommentViewModel[];
 
   constructor(
@@ -22,36 +23,38 @@ export class CommentsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  editComment(comment: BlogCommentViewModel){
+  editComment(comment: BlogCommentViewModel) {
     comment.isEditable = true;
   }
 
-  showDeleteConfirm(comment: BlogCommentViewModel){
+  showDeleteConfirm(comment: BlogCommentViewModel) {
     comment.deleteConfirm = true;
   }
 
-  cancelDeleteConfirm(comment: BlogCommentViewModel){
+  cancelDeleteConfirm(comment: BlogCommentViewModel) {
     comment.deleteConfirm = false;
   }
 
-  deleteConfirm(comment: BlogCommentViewModel, comments: BlogCommentViewModel[]){
-    this.blogCommentService.delete(comment.blogCommentId).subscribe(()=> {
+  deleteConfirm(comment: BlogCommentViewModel, comments: BlogCommentViewModel[]) {
+    this.blogCommentService.delete(comment.blogCommentId).subscribe(() => {
+
       let index = 0;
-      for(let i=0; comments.length; i++){
+
+      for(let i=0; i<comments.length; i++) {
         if (comments[i].blogCommentId === comment.blogCommentId) {
           index = i;
-
         }
       }
 
       if (index > -1) {
         comments.splice(index, 1);
       }
-      this.toastr.info('Blog comment deleted');
+
+      this.toastr.info("Blog comment deleted.");
     });
   }
 
-  replyComment(comment: BlogCommentViewModel){
+  replyComment(comment: BlogCommentViewModel) {
     let replyComment: BlogCommentViewModel = {
       parentBlogCommentId: comment.blogCommentId,
       content: '',
@@ -62,13 +65,14 @@ export class CommentsComponent implements OnInit {
       updateDate: new Date(),
       isEditable: false,
       deleteConfirm: false,
-      isReplying: false,
+      isReplying: true,
       comments: []
-    }
+    };
+
     comment.comments.push(replyComment);
   }
 
-  onCommentSaved(blogComment: BlogComment, comment: BlogCommentViewModel){
+  onCommentSaved(blogComment: BlogComment, comment: BlogCommentViewModel) {
     comment.blogCommentId = blogComment.blogCommentId;
     comment.parentBlogCommentId = blogComment.parentBlogCommentId;
     comment.blogId = blogComment.blogId;
@@ -79,7 +83,4 @@ export class CommentsComponent implements OnInit {
     comment.isEditable = false;
     comment.isReplying = false;
   }
-
-  
-
 }

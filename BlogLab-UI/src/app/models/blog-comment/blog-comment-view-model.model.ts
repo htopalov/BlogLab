@@ -1,4 +1,5 @@
 export class BlogCommentViewModel {
+
     constructor(
         public parentBlogCommentId: number,
         public blogCommentId: number,
@@ -11,5 +12,6 @@ export class BlogCommentViewModel {
         public deleteConfirm: boolean = false,
         public isReplying: boolean = false,
         public comments: BlogCommentViewModel[]
-    ){}
+    ) {}
+
 }

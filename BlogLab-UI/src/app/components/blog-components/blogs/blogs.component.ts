@@ -11,6 +11,7 @@ import { BlogService } from 'src/app/services/blog.service';
   styleUrls: ['./blogs.component.css']
 })
 export class BlogsComponent implements OnInit {
+
   pagedBlogResult: PagedResult<Blog>;
 
   constructor(
@@ -18,15 +19,16 @@ export class BlogsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadPagedBlogResult(1,6);
+    this.loadPagedBlogResult(1, 6);
   }
 
-  pageChanged(event: PageChangedEvent){
-    this.loadPagedBlogResult(event.page,event.itemsPerPage);
+  pageChanged(event: PageChangedEvent) : void {
+    this.loadPagedBlogResult(event.page, event.itemsPerPage);
   }
 
-  loadPagedBlogResult(page, itemsPerPage){
-    let blogPaging = new BlogPaging(page,itemsPerPage);
+  loadPagedBlogResult(page, itemsPerPage) {
+    let blogPaging = new BlogPaging(page, itemsPerPage);
+
     this.blogService.getAll(blogPaging).subscribe(pagedBlogs => {
       this.pagedBlogResult = pagedBlogs;
     });

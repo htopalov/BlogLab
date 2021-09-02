@@ -22,8 +22,10 @@ export class BlogComponent implements OnInit {
 
   ngOnInit(): void {
     const blogId = parseInt(this.route.snapshot.paramMap.get('id'));
+
     this.blogService.get(blogId).subscribe(blog => {
       this.blog = blog;
+
       if (!!this.blog.photoId) {
         this.photoService.get(this.blog.photoId).subscribe(photo => {
           this.blogPhotoUrl = photo.imageUrl;

@@ -19,6 +19,7 @@ export class JwtInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const currentUser = this.accountService.currentUserValue;
     const isApiUrl = request.url.startsWith(environment.webApi);
+    
     if (this.accountService.isLoggedIn() && isApiUrl) {
       request = request.clone({
         setHeaders: {
@@ -26,6 +27,7 @@ export class JwtInterceptor implements HttpInterceptor {
         }
       })
     }
+
     return next.handle(request);
   }
 }

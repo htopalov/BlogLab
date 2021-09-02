@@ -1,4 +1,5 @@
 export class Photo {
+
     constructor(
         public photoId: number,
         public applicationUserId: number,
@@ -8,5 +9,6 @@ export class Photo {
         public publishDate: Date,
         public updateDate: Date,
         public deleteConfirm: boolean = false
-    ){}
+    ) {}
+
 }

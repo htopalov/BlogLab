@@ -8,7 +8,9 @@ import { AccountService } from 'src/app/services/account.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+
   isCollapsed = true;
+
   constructor(
     public accountService: AccountService,
     private router: Router
@@ -17,7 +19,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout (){
+  logout() {
     this.accountService.logout();
     this.router.navigate(['/']);
   }

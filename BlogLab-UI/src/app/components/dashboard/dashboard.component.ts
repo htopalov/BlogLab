@@ -11,6 +11,7 @@ import { BlogService } from 'src/app/services/blog.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+
   userBlogs: Blog[];
 
   constructor(
@@ -22,43 +23,46 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.userBlogs = [];
+
     let currentApplicationUserId = this.accountService.currentUserValue.applicationUserId;
+
     this.blogService.getByApplicationUserId(currentApplicationUserId).subscribe(userBlogs => {
       this.userBlogs = userBlogs;
     });
   }
 
-  confirmDelete(blog: Blog){
+  confirmDelete(blog: Blog) {
     blog.deleteConfirm = true;
   }
 
-  cancelDeleteConfirm(blog: Blog){
+  cancelDeleteConfirm(blog: Blog) {
     blog.deleteConfirm = false;
   }
 
-  deleteConfirmed(blog: Blog, blogs: Blog[]){
-    this.blogService.delete(blog.blogId).subscribe(()=> {
+  deleteConfirmed(blog: Blog, blogs: Blog[]) {
+    this.blogService.delete(blog.blogId).subscribe(() => {
+
       let index = 0;
-      for(let i=0; i<blogs.length; i++){
+
+      for (let i=0; i<blogs.length; i++) {
         if (blogs[i].blogId === blog.blogId) {
           index = i;
         }
       }
 
       if (index > -1) {
-        blogs.splice(index,1);
+        blogs.splice(index, 1);
       }
 
-      this.toastr.info('Blog deleted');
+      this.toastr.info("Blog deleted.");
     });
   }
 
-  editBlog(blogId: number){
+  editBlog(blogId: number) {
     this.router.navigate([`/dashboard/${blogId}`]);
   }
 
-  createBlog(){
+  createBlog() {
     this.router.navigate(['/dashboard/-1']);
   }
-
 }

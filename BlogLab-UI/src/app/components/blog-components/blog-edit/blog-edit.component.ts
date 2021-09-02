@@ -15,6 +15,7 @@ import { PhotoService } from 'src/app/services/photo.service';
   styleUrls: ['./blog-edit.component.css']
 })
 export class BlogEditComponent implements OnInit {
+
   blogForm: FormGroup;
   confirmImageDelete: boolean = false;
   userPhotos: Photo[] = [];
@@ -24,10 +25,11 @@ export class BlogEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private blogService: BlogService,
     private photoService: PhotoService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
+
     const blogId = parseInt(this.route.snapshot.paramMap.get('id'));
 
     this.blogForm = this.formBuilder.group({
@@ -37,10 +39,10 @@ export class BlogEditComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(50)
       ]],
-      content: ['',[
+      content : ['', [
         Validators.required,
         Validators.minLength(300),
-        Validators.maxLength(5000)
+        Validators.maxLength(5000),
       ]],
       photoDescription: [null],
       photoId: [null]
@@ -51,46 +53,48 @@ export class BlogEditComponent implements OnInit {
     });
 
     if (!!blogId && blogId !== -1) {
-      this.blogService.get(blogId).subscribe(blog=>{
+      this.blogService.get(blogId).subscribe(blog => {
         this.updateForm(blog);
       });
     }
   }
 
-  getPhoto(photoId: number){
-    for(let i=0; i<this.userPhotos.length; i++){
+  getPhoto(photoId: number) {
+    for (let i=0; i<this.userPhotos.length; i++) {
       if (this.userPhotos[i].photoId === photoId) {
         return this.userPhotos[i];
-      }
+      } 
     }
+
     return null;
   }
 
-  isTouched(field: string){
+  isTouched(field: string) {
     return this.blogForm.get(field).touched;
   }
 
-  hasErrors(field: string){
+  hasErrors(field: string) {
     return this.blogForm.get(field).errors;
   }
 
-  hasError(field: string, error: string){
-    return this.blogForm.get(field).hasError(error);
+  hasError(field: string, error: string) {
+    return !!this.blogForm.get(field).hasError(error);
   }
 
-  isNew(){
+  isNew() {
     return parseInt(this.blogForm.get('blogId').value) === -1;
   }
-  
-  detachPhoto(){
+
+  detachPhoto() {
     this.blogForm.patchValue({
       photoId: null,
       photoDescription: null
     });
   }
 
-  updateForm(blog: Blog){
+  updateForm(blog: Blog) {
     let photoDescription = this.getPhoto(blog.photoId)?.description;
+
     this.blogForm.patchValue({
       blogId: blog.blogId,
       title: blog.title,
@@ -109,18 +113,18 @@ export class BlogEditComponent implements OnInit {
     });
   }
 
-  onSubmit(){
+  onSubmit() {
+
     let blogCreate: BlogCreate = new BlogCreate(
-      this.blogForm.get('blogId').value,
-      this.blogForm.get('title').value,
-      this.blogForm.get('content').value,
-      this.blogForm.get('photoId').value
+      this.blogForm.get("blogId").value,
+      this.blogForm.get("title").value,
+      this.blogForm.get("content").value,
+      this.blogForm.get("photoId").value
     );
-    
+
     this.blogService.create(blogCreate).subscribe(createdBlog => {
       this.updateForm(createdBlog);
-      this.toastr.info('Blog saved');
-    });
+      this.toastr.info("Blog saved.");
+    })
   }
-
 }

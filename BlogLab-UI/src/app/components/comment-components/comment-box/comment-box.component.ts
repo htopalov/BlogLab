@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { BlogCommentCreate } from 'src/app/models/blog-comment/blog-comment-create.model';
 import { BlogCommentViewModel } from 'src/app/models/blog-comment/blog-comment-view-model.model';
 import { BlogComment } from 'src/app/models/blog-comment/blog-comment.model';
 import { BlogCommentService } from 'src/app/services/blog-comment.service';
-import { EventEmitter } from 'stream';
 
 @Component({
   selector: 'app-comment-box',
@@ -13,10 +12,12 @@ import { EventEmitter } from 'stream';
   styleUrls: ['./comment-box.component.css']
 })
 export class CommentBoxComponent implements OnInit {
+
   @Input() comment: BlogCommentViewModel;
   @Output() commentSaved = new EventEmitter<BlogComment>();
 
   @ViewChild('commentForm') commentForm: NgForm;
+
   constructor(
     private blogCommentService: BlogCommentService,
     private toastr: ToastrService
@@ -25,11 +26,12 @@ export class CommentBoxComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  resetComment(){
+  resetComment() {
     this.commentForm.reset();
   }
 
-  onSubmit(){
+  onSubmit() {
+
     let blogCommentCreate: BlogCommentCreate = {
       blogCommentId: this.comment.blogCommentId,
       parentBlogCommentId: this.comment.parentBlogCommentId,
@@ -38,10 +40,9 @@ export class CommentBoxComponent implements OnInit {
     };
 
     this.blogCommentService.create(blogCommentCreate).subscribe(blogComment => {
-      this.commentSaved.emit(blogComment);
+      this.toastr.info("Comment saved.");
       this.resetComment();
-      this.toastr.info('Comment saved');
-    });
+      this.commentSaved.emit(blogComment);
+    })
   }
-
 }

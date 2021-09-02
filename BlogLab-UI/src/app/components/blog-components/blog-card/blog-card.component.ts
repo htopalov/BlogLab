@@ -10,7 +10,8 @@ import { PhotoService } from 'src/app/services/photo.service';
 })
 export class BlogCardComponent implements OnInit {
 
-  @Input blog: Blog;
+  @Input() blog: Blog;
+
   blogPhotoUrl: string;
 
   constructor(
@@ -24,12 +25,11 @@ export class BlogCardComponent implements OnInit {
         if (!!photo) {
           this.blogPhotoUrl = photo.imageUrl;
         }
-      });
+      })
     }
   }
 
-  readMore(blogId: number){
-    this.router.navigate([`/blogs/${blogId}`]);
+  readMore(blogId: number) {
+    this.router.navigate([`/blogs/${blogId}`])
   }
-
 }
